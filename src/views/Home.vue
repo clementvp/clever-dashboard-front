@@ -118,7 +118,7 @@ export default {
       if (this.dashboardName !== '') {
         try {
           await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { name: this.dashboardName });
-          this.dashboardName = null;
+          this.dashboardName = '';
           this.retrieveAlldashboards();
           this.creationModalActive = false;
         } catch (error) {
