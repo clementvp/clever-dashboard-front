@@ -46,7 +46,7 @@ export default {
   methods: {
     async getDashboardInfo(id) {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`);
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
         this.dashboard = response.data.dashboard;
         this.dashboard.id = id;
         this.plugins = response.data.dashboard.plugins;

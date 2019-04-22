@@ -12,6 +12,14 @@
       <div class="navbar-menu" :class="{ 'is-active': showNav }">
         <div class="navbar-end">
           <a class="navbar-item" @click="goTo('/')">Accueil</a>
+          <a id="user-item" class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <font-awesome-icon icon="user"/>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" @click="logout">Logout</a>
+            </div>
+          </a>
         </div>
       </div>
     </nav>
@@ -30,11 +38,17 @@ export default {
     goTo(page) {
       this.$router.push(page);
     },
+    logout() {
+      this.$auth.logOut();
+    },
   },
 };
 </script>
 <style scoped>
 .navbar {
   background-color: #80cbc4;
+}
+#user-item {
+  margin-right: 50px;
 }
 </style>

@@ -69,7 +69,11 @@
             >
               <div>Plugin: {{item.type}}</div>
               <div class="has-text-centered">
-                <button class="button is-danger" @click="deletePlugin(item.i)">Supprimer</button>
+                <button class="btn-table button is-danger" @click="deletePlugin(item.i)">
+                  <span>
+                    <font-awesome-icon icon="trash-alt"/>
+                  </span>
+                </button>
               </div>
             </grid-item>
           </grid-layout>
@@ -97,7 +101,6 @@ export default {
       plugins: [],
       availablePlugins: [],
       isNotificationActive: false,
-      addPluginModal: false,
       notificationMsg: null,
       notificationType: null,
       activeTab: 0,
@@ -106,7 +109,7 @@ export default {
   methods: {
     async save() {
       try {
-        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${this.$route.params.id}/plugin`, { plugins: this.plugins });
+        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${this.$route.params.id}/plugin`, { plugins: this.plugins }, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
         this.$toast.open({
           message: 'Le dashboard a bien été sauvegardé',
           type: 'is-success',
@@ -119,14 +122,15 @@ export default {
     },
     async getDashboardInfo(id) {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`);
-        this.dashboard = response.data.dashboard;
-        this.dashboard.id = id;
-        this.plugins = response.data.dashboard.plugins;
-        if (!this.dashboard) {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
+        if (!response.data.dashboard) {
           this.notificationType = 'is-danger';
-          this.notificationMsg = "Il n'y a pas de dashboard avce cet id";
+          this.notificationMsg = "Il n'y a pas de dashboard avec cet id";
           this.isNotificationActive = true;
+        } else {
+          this.dashboard = response.data.dashboard;
+          this.dashboard.id = id;
+          this.plugins = response.data.dashboard.plugins;
         }
       } catch (error) {
         this.notificationType = 'is-danger';
@@ -136,7 +140,7 @@ export default {
     },
     async getAvailablePlugins() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/plugin`);
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/plugin`, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
         this.availablePlugins = response.data.plugins;
       } catch (error) {
         this.notificationType = 'is-danger';
@@ -148,7 +152,6 @@ export default {
       this.plugins.push({
         x: 0, y: 0, w: 4, h: 4, i: shortid.generate(), url: `${process.env.VUE_APP_PLUGINS_BASE_URL}/${plugin}`, type: plugin,
       });
-      this.addPluginModal = false;
     },
     deletePlugin(pluginId) {
       this.plugins = this.plugins.filter(value => value.i !== pluginId);

@@ -87,16 +87,18 @@ export default {
       creationModalActive: false,
       isNotificationActive: false,
       isLoading: false,
+      access_token: null,
     };
   },
   methods: {
     async retrieveAlldashboards() {
       this.isLoading = true;
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard`);
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
         this.dashboards = response.data.dashboards;
         this.isLoading = false;
       } catch (error) {
+        console.log(error);
         this.notificationMsg = 'Une erreure est survenue lors de la récupération de la liste des dashboards';
         this.isLoading = false;
         this.isNotificationActive = true;
@@ -104,7 +106,7 @@ export default {
     },
     async deleteDashboard(id) {
       try {
-        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`);
+        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/dashboard/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
         this.retrieveAlldashboards();
       } catch (error) {
         this.notificationMsg = 'Une erreure est survenue lors de la supression du dashboard';
@@ -117,7 +119,7 @@ export default {
     async createNewDashboard() {
       if (this.dashboardName !== '') {
         try {
-          await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { name: this.dashboardName });
+          await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { name: this.dashboardName }, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
           this.dashboardName = '';
           this.retrieveAlldashboards();
           this.creationModalActive = false;
