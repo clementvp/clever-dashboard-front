@@ -13,7 +13,7 @@ export default {
     try {
       await this.$auth.handleAuthentication();
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   },
 };

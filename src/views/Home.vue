@@ -98,7 +98,6 @@ export default {
         this.dashboards = response.data.dashboards;
         this.isLoading = false;
       } catch (error) {
-        console.log(error);
         this.notificationMsg = 'Une erreure est survenue lors de la récupération de la liste des dashboards';
         this.isLoading = false;
         this.isNotificationActive = true;
