@@ -3,6 +3,21 @@
     <NavBar/>
     <b-notification :type="notificationType" :active.sync="isNotificationActive">{{notificationMsg}}</b-notification>
     <div class="custom-container">
+      <b-modal :active.sync="isPluginModalActive">
+        <div class="card">
+          <div class="card-content">
+            <h4 class="title is-4 has-text-centered">Liste des plugins diponibles</h4>
+            <b-table :data="availablePlugins" :paginated="true" :per-page="10">
+              <template slot-scope="props">
+                <b-table-column label="Nom">{{ props.row}}</b-table-column>
+                <b-table-column>
+                  <button class="button is-primary" @click="addPlugin(props.row)">Ajouter</button>
+                </b-table-column>
+              </template>
+            </b-table>
+          </div>
+        </div>
+      </b-modal>
       <h5 class="title is-5">Edition: {{this.dashboard.name}}</h5>
       <div class="columns">
         <div class="column is-2">
@@ -15,10 +30,10 @@
                 </span>
               </template>
               <div>
-                <button class="btn-cmd button is-success" @click="save()">
+                <button class="btn-cmd button is-primary" @click="isPluginModalActive = true">
                   <span>
-                    Sauvegarder
-                    <font-awesome-icon icon="save"/>
+                    Plugins
+                    <font-awesome-icon icon="plug"/>
                   </span>
                 </button>
               </div>
@@ -30,16 +45,13 @@
                   </span>
                 </button>
               </div>
-            </b-tab-item>
-            <b-tab-item>
-              <template slot="header">
-                <span>
-                  Plugins
-                  <font-awesome-icon icon="plug"/>
-                </span>
-              </template>
-              <div v-for="plugin in availablePlugins" :key="plugin">
-                <button class="button btn-plugin is-primary" @click="addPlugin(plugin)">{{plugin}}</button>
+              <div>
+                <button class="btn-cmd button is-success" @click="save()">
+                  <span>
+                    Sauvegarder
+                    <font-awesome-icon icon="save"/>
+                  </span>
+                </button>
               </div>
             </b-tab-item>
           </b-tabs>
@@ -101,6 +113,7 @@ export default {
       plugins: [],
       availablePlugins: [],
       isNotificationActive: false,
+      isPluginModalActive: false,
       notificationMsg: null,
       notificationType: null,
       activeTab: 0,

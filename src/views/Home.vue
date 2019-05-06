@@ -4,19 +4,6 @@
     <b-loading :is-full-page="true" :active.sync="isLoading"></b-loading>
     <b-notification :active.sync="isNotificationActive" type="is-danger">{{notificationMsg}}</b-notification>
     <div class="container">
-      <b-modal :active.sync="creationModalActive" has-modal-card>
-        <div class="card">
-          <div class="card-content">
-            <h5 class="title is-5">Nouveau dashboard</h5>
-            <b-field label="Nom du nouveau dashboard:">
-              <b-input v-model="dashboardName"></b-input>
-            </b-field>
-            <div class="has-text-centered">
-              <button class="button is-primary" @click="createNewDashboard">Créer</button>
-            </div>
-          </div>
-        </div>
-      </b-modal>
       <div>
         <h5 class="title is-5">Liste dashboards</h5>
       </div>
@@ -84,10 +71,8 @@ export default {
       dashboards: [],
       dashboardName: '',
       notificationMsg: null,
-      creationModalActive: false,
       isNotificationActive: false,
       isLoading: false,
-      access_token: null,
     };
   },
   methods: {
@@ -113,13 +98,17 @@ export default {
       }
     },
     clickButtonCreation() {
-      this.creationModalActive = true;
+      this.$dialog.prompt({
+        message: 'Nom du dashboard:',
+        confirmText: 'Créer',
+        cancelText: 'Annuler',
+        onConfirm: value => this.createNewDashboard(value),
+      });
     },
-    async createNewDashboard() {
-      if (this.dashboardName !== '') {
+    async createNewDashboard(name) {
+      if (name !== '') {
         try {
-          await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { name: this.dashboardName }, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
-          this.dashboardName = '';
+          await axios.post(`${process.env.VUE_APP_API_BASE_URL}/dashboard`, { name }, { headers: { Authorization: `Bearer ${localStorage.getItem('access-token')}` } });
           this.retrieveAlldashboards();
           this.creationModalActive = false;
         } catch (error) {
