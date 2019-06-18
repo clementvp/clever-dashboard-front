@@ -45,14 +45,6 @@
                   </span>
                 </button>
               </div>
-              <div>
-                <button class="btn-cmd button is-success" @click="save()">
-                  <span>
-                    Sauvegarder
-                    <font-awesome-icon icon="save"/>
-                  </span>
-                </button>
-              </div>
             </b-tab-item>
           </b-tabs>
         </div>
@@ -78,8 +70,10 @@
               :w="item.w"
               :h="item.h"
               :i="item.i"
+              @resized="save"
+              @moved="save"
             >
-              <div>Plugin: {{item.type}}</div>
+              <div>{{item.type}}</div>
               <div class="has-text-centered">
                 <button class="btn-table button is-danger" @click="deletePlugin(item.i)">
                   <span>
@@ -165,9 +159,11 @@ export default {
       this.plugins.push({
         x: 0, y: 0, w: 4, h: 4, i: shortid.generate(), url: `${process.env.VUE_APP_PLUGINS_BASE_URL}/${plugin}`, type: plugin,
       });
+      this.save();
     },
     deletePlugin(pluginId) {
       this.plugins = this.plugins.filter(value => value.i !== pluginId);
+      this.save();
     },
     goToView() {
       this.$router.push({ path: `/view/${this.$route.params.id}` });
