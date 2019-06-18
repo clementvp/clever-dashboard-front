@@ -70,16 +70,18 @@
               :w="item.w"
               :h="item.h"
               :i="item.i"
+              minW="3"
+              minH="3"
               @resized="save"
               @moved="save"
             >
-              <div>{{item.type}}</div>
-              <div class="has-text-centered">
-                <button class="btn-table button is-danger" @click="deletePlugin(item.i)">
-                  <span>
-                    <font-awesome-icon icon="trash-alt"/>
-                  </span>
-                </button>
+              <div>
+                <b-field grouped>
+                  <h5 class="title is-5">{{item.type}}</h5>
+                  <div @click="deletePlugin(item.i)" class="delete-button">
+                    <b-icon icon="close-circle" size="is-medium"></b-icon>
+                  </div>
+                </b-field>
               </div>
             </grid-item>
           </grid-layout>
@@ -157,7 +159,7 @@ export default {
     },
     addPlugin(plugin) {
       this.plugins.push({
-        x: 0, y: 0, w: 4, h: 4, i: shortid.generate(), url: `${process.env.VUE_APP_PLUGINS_BASE_URL}/${plugin}`, type: plugin,
+        x: 0, y: 0, w: 3, h: 3, i: shortid.generate(), url: `${process.env.VUE_APP_PLUGINS_BASE_URL}/${plugin}`, type: plugin,
       });
       this.save();
     },
@@ -191,5 +193,13 @@ export default {
 .btn-plugin {
   margin-bottom: 10px;
   width: 150px;
+}
+.delete-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.delete-button:hover {
+  cursor: pointer;
 }
 </style>
