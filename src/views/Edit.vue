@@ -70,8 +70,8 @@
               :w="item.w"
               :h="item.h"
               :i="item.i"
-              minW="3"
-              minH="3"
+              :minW="minW"
+              :minH="minH"
               @resized="save"
               @moved="save"
             >
@@ -113,6 +113,8 @@ export default {
       notificationMsg: null,
       notificationType: null,
       activeTab: 0,
+      minH: 3,
+      minW: 3,
     };
   },
   methods: {
