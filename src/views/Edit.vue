@@ -124,6 +124,8 @@ export default {
         this.$toast.open({
           message: 'Le dashboard a bien été sauvegardé',
           type: 'is-success',
+          position: 'is-bottom-right',
+          duration: 1000,
         });
       } catch (error) {
         this.notificationType = 'is-danger';
